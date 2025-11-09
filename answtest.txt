@@ -5,7 +5,7 @@ A: 2
 Q: Trái đất quay quanh gì?
 A: Mặt trời
 
----https://github.com/pulls
+---
 Q: Nước sôi ở nhiệt độ bao nhiêu °C?
 A: 100
 
@@ -20,6 +20,7 @@ A: Xanh
 ---
 Q: Màu của thành nhân?
 A: Gây
+
 
 
 
