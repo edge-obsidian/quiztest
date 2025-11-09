@@ -1,0 +1,110 @@
+// ==UserScript==
+// @name         Wayground Gray Panel + Search Box
+// @namespace    http://tampermonkey.net/
+// @version      2.0
+// @description  Bảng màu xám chữ trắng + thanh tìm kiếm cho Wayground
+// @match        https://wayground.com/*
+// @grant        GM_addStyle
+// @run-at       document-end
+// ==/UserScript==
+
+(function() {
+    'use strict';
+
+    GM_addStyle(`
+        #wg-gray-panel {
+            position: fixed;
+            top: 16px;
+            right: 16px;
+            width: 350px;
+            background: rgba(40, 40, 40, 0.95);
+            color: #fff;
+            padding: 14px 16px;
+            border-radius: 10px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+            z-index: 999999;
+            font-family: system-ui, -apple-system, "Segoe UI", Roboto;
+            font-size: 14px;
+        }
+        #wg-gray-panel .wg-close {
+            position: absolute;
+            top: 8px;
+            right: 10px;
+            cursor: pointer;
+            font-weight: bold;
+            opacity: 0.8;
+        }
+        #wg-gray-panel input[type="text"] {
+            width: 100%;
+            padding: 6px 8px;
+            border-radius: 6px;
+            border: none;
+            margin-bottom: 10px;
+            font-size: 13px;
+        }
+        #wg-gray-panel .entry {
+            background: rgba(255,255,255,0.1);
+            padding: 8px;
+            border-radius: 6px;
+            margin-bottom: 8px;
+        }
+        #wg-gray-panel .entry small {
+            display: block;
+            color: #bbb;
+            margin-top: 4px;
+        }
+    `);
+
+    const data = [
+        {
+            question: "Mẹ tôi _____ trách nhiệm điều hành gia đình.",
+            answer: "cảm"
+        },
+        {
+            question: "Làm việc nhà cùng gia đình sẽ giúp củng cố ___.",
+            answer: "mối quan hệ gia đình"
+        }
+    ];
+
+    const panel = document.createElement('div');
+    panel.id = 'wg-gray-panel';
+    panel.innerHTML = `
+        <div class="wg-close">×</div>
+        <input type="text" id="wg-search" placeholder="Tìm kiếm...">
+        <div id="wg-list"></div>
+    `;
+
+    const list = panel.querySelector('#wg-list');
+    const render = (query = '') => {
+        list.innerHTML = '';
+        const filtered = data.filter(item =>
+            item.question.toLowerCase().includes(query.toLowerCase()) ||
+            item.answer.toLowerCase().includes(query.toLowerCase())
+        );
+        if (filtered.length === 0) {
+            list.innerHTML = '<div style="opacity:0.6">Không tìm thấy kết quả nào...</div>';
+        } else {
+            filtered.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'entry';
+                div.innerHTML = `
+                    <div>${item.question}</div>
+                    <small>${item.answer}</small>
+                `;
+                list.appendChild(div);
+            });
+        }
+    };
+
+    render();
+
+    panel.querySelector('#wg-search').addEventListener('input', e => {
+        render(e.target.value);
+    });
+
+    panel.querySelector('.wg-close').addEventListener('click', () => {
+        panel.remove();
+    });
+
+    document.body.appendChild(panel);
+})();
