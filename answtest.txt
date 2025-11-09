@@ -16,3 +16,10 @@ A: 3
 ---
 Q: Màu của bầu trời vào ban ngày?
 A: Xanh
+
+---
+Q: Màu của thành nhân?
+A: Gây
+
+
+
